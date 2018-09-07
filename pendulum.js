@@ -6,12 +6,15 @@ class Pendulum {
         this.headXPos = headXPos;
         this.headElement = headElement;
         
-        // use pythagoras to find the length of the pendulum
-        this.length = Math.sqrt(Math.pow(this.calcWidth(), 2) + Math.pow(this.calcHeight(), 2));
-        
+        this.length = this.calcLength();
         this.horizontalVelocity = 0;
         this.verticalVelocity = 0;
-        this.calcAngle();
+        this.updateAngle();
+    }
+
+    // use pythagoras to find the length of the pendulum
+    calcLength(){
+        return Math.sqrt(Math.pow(this.calcWidth(), 2) + Math.pow(this.calcHeight(), 2)); 
     }
 
     // calculate the width and height of the triangle formed by the pendulum and a vertical line through the center
@@ -19,7 +22,7 @@ class Pendulum {
     calcHeight(){return this.headYPos - this.centerYPos;}
 
     // finds the angle in radians between the pendulum and a vertical line
-    calcAngle(){
+    updateAngle(){
         let width = this.calcWidth();
         let height = this.calcHeight();
 
@@ -70,11 +73,13 @@ class Pendulum {
 
     // updates all the pendulums values
     updatePendulum(){
-        this.calcAngle();
+        this.updateAngle();
         this.updateForces();
         this.updateVelocity();
         this.updatePosition();
 
-        console.log('X: ' + this.headXPos + ' Y: ' + this.headYPos + ' yV: ' + this.verticalVelocity);
+        document.getElementById("length").textContent = "Length: " + this.calcLength();
+        document.getElementById("angle").textContent = "Angle: " + this.angle*180/Math.PI;
+        document.getElementById("vForce").textContent = "Vertical Force: " + this.verticalForce;
     }
 }

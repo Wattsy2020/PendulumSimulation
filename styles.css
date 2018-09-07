@@ -9,3 +9,8 @@
 .pendulumContainer {
     position: relative;
 }
+
+#logging {
+    top: 0;
+    left: 0;
+}
