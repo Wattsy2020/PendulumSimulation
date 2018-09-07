@@ -8,16 +8,33 @@
     <body>
         <div class="pendulumContainer">
             <div class="head" id="head1"></div>
+            <div id="logging">
+                <h3 id="length">Length: </h3>
+                <h3 id="angle">Angle: </h3>
+                <h3 id="vForce">Vertical Force: </h3>
+            </div>
         </div>
 
         <script>
+        let paused = false;
+        function pause(){
+            if (!paused){
+                clearInterval(interval);
+            }
+            else {
+                interval = setInterval(function(){p1.updatePendulum();}, timeInterval*1000);
+            }
+            paused = !paused;
+        }
+
         let head = document.getElementById("head1");
+        document.onkeydown = pause;
         
         let timeInterval = .005 // time in seconds between each calculation
-        let gravity = 1000; // increased gravity so the animation happens faster
+        let gravity = 100; // increased gravity so the animation happens faster
 
-        p1 = new Pendulum(100, 500, 100, 900, head);
-        setInterval(function(){p1.updatePendulum();}, timeInterval*1000);
+        p1 = new Pendulum(300, 600, 300, 900, head);
+        let interval = setInterval(function(){p1.updatePendulum();}, timeInterval*1000);
         </script>
     </body>
 </html>
