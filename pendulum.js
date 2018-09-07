@@ -1,26 +1,7 @@
-class Pendulum {
-    constructor (centerYPos, centerXPos, headYPos, headXPos, centerElement, rodElement, headElement){
-        this.centerYPos = centerYPos;
-        this.centerXPos = centerXPos;
-        this.headYPos = headYPos;
-        this.headXPos = headXPos;
-
-        this.centerElement = centerElement;
-        this.centerElement.style.top = centerYPos;
-        this.centerElement.style.left = centerXPos;
-        this.headElement = headElement;
-        
-        this.length = this.calcLength();
-        this.horizontalVelocity = 0;
-        this.verticalVelocity = 0;
-        this.updateAngle();
-
-        this.rodElement = rodElement;
-        this.rodElement.style.height = this.length;
-        this.rodElement.style.top = centerYPos + this.centerElement.offsetHeight/2;
-        this.rodElement.style.left = centerXPos;
-        this.updateRodAngle();
-    }
+// base class of both types of pendulum, need this so I can have two different constructors
+// -without being forced to call the constructor of the base class
+class AbstractPendulum {
+    constructor(){}
 
     updateRodAngle(){
         this.rodElement.style.transform =  "rotate("+this.angle*-180/Math.PI+"deg)";
@@ -93,22 +74,99 @@ class Pendulum {
         this.headYPos = this.length*Math.cos(this.angle) + this.centerYPos;
     }
 
-    // updates all the pendulum's values
-    updatePendulum(){
-        // update the pendulum's values in tiny time increments to increase accuracy
-        for (let i = 0; i < numCalculations; i++){
-            this.calculateValues();
-        }
-
+    // updates the position of the pendulum's elements
+    updateElementPositions(){
         // update the head's position on the page, stuff after this.headYPos is to correct it so the center is positioned properly
         this.headElement.style.top = this.headYPos - this.headElement.offsetHeight/2 + this.rodElement.offsetWidth/2;
         this.headElement.style.left = this.headXPos - this.headElement.offsetWidth/2 + this.rodElement.offsetWidth/2;
 
         // update the rod
         this.updateRodAngle();
+    }
+}
 
-        // log values
-        document.getElementById("angle").textContent = "Angle: " + this.angle*180/Math.PI;
-        document.getElementById("vForce").textContent = "Total Force: " + Math.abs(this.verticalForce) + Math.abs(this.horizontalForce);
+// represents a pendulum with a fixed center
+class Pendulum extends AbstractPendulum {
+    constructor(centerYPos, centerXPos, headYPos, headXPos, centerElement, rodElement, headElement){
+        super();
+        this.centerYPos = centerYPos;
+        this.centerXPos = centerXPos;
+        this.headYPos = headYPos;
+        this.headXPos = headXPos;
+
+        this.centerElement = centerElement;
+        this.centerElement.style.top = centerYPos;
+        this.centerElement.style.left = centerXPos;
+        this.headElement = headElement;
+        
+        this.length = this.calcLength();
+        this.horizontalVelocity = 0;
+        this.verticalVelocity = 0;
+        this.updateAngle();
+
+        this.rodElement = rodElement;
+        this.rodElement.style.height = this.length;
+        this.rodElement.style.top = centerYPos + this.centerElement.offsetHeight/2;
+        this.rodElement.style.left = centerXPos;
+        this.updateRodAngle();
+    }
+}
+
+// represents a pendulum with a moving center, i.e. attached to another pendulum
+class MovingPendulum extends AbstractPendulum {
+    constructor(parentPendulum, headYPos, headXPos, rodElement, headElement){
+        super();
+        this.parent = parentPendulum;
+        this.updateCenter();
+
+        this.headYPos = headYPos;
+        this.headXPos = headXPos;
+        this.headElement = headElement;
+        
+        this.length = this.calcLength();
+        this.horizontalVelocity = 0;
+        this.verticalVelocity = 0;
+        this.updateAngle();
+
+        this.rodElement = rodElement;
+        this.rodElement.style.height = this.length;
+        this.rodElement.style.top = this.centerYPos;
+        this.rodElement.style.left = this.centerXPos;
+        this.updateRodAngle();
+    }   
+
+    updateCenter(){
+        this.centerXPos = this.parent.headXPos;
+        this.centerYPos = this.parent.headYPos;
+    }
+
+    calculateValues(){
+        this.updateCenter();
+        super.calculateValues();
+    }
+
+    updateElementPositions(){
+        // console.log("Updating positions");
+        // console.log("X: " + this.headXPos + " Y: " + this.headYPos);
+        super.updateElementPositions();
+    }
+}
+
+class System {
+    constructor(basePendulum, childPendulum){
+        this.basePendulum = basePendulum;
+        this.childPendulum = childPendulum;
+    }
+
+    // updates every pendulum's position
+    updatePendulums(){
+        // update each pendulum's values in tiny time increments to increase accuracy
+        for (let i = 0; i < numCalculations; i++){
+            this.basePendulum.calculateValues();
+            this.childPendulum.calculateValues();
+        }
+
+        this.basePendulum.updateElementPositions();
+        this.childPendulum.updateElementPositions();
     }
 }
