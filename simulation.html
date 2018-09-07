@@ -3,37 +3,31 @@
         <title>Double pendulum</title>
         <link rel="stylesheet" href="styles.css" />
         <script src="pendulum.js"></script>
+        <script src="controlAnimation.js"></script>
     </head>
 
     <body>
         <div class="pendulumContainer">
+            <div class="center" id="center1"></div>
+            <div class="rod" id="rod1"></div>
             <div class="head" id="head1"></div>
+
             <div id="logging">
-                <h3 id="length">Length: </h3>
                 <h3 id="angle">Angle: </h3>
                 <h3 id="vForce">Vertical Force: </h3>
+                <td><button onclick="pause()">Pause</button></td>
             </div>
         </div>
 
         <script>
-        let paused = false;
-        function pause(){
-            if (!paused){
-                clearInterval(interval);
-            }
-            else {
-                interval = setInterval(function(){p1.updatePendulum();}, timeInterval*1000);
-            }
-            paused = !paused;
-        }
-
+        let center = document.getElementById("center1");
+        let rod = document.getElementById("rod1");
         let head = document.getElementById("head1");
-        document.onkeydown = pause;
         
         let timeInterval = .005 // time in seconds between each calculation
-        let gravity = 100; // increased gravity so the animation happens faster
+        let gravity = 1000; // increased gravity so the animation happens faster
 
-        p1 = new Pendulum(300, 600, 300, 900, head);
+        p1 = new Pendulum(300, 600, 300, 900, center, rod, head);
         let interval = setInterval(function(){p1.updatePendulum();}, timeInterval*1000);
         </script>
     </body>

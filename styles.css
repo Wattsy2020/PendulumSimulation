@@ -6,6 +6,21 @@
     position: absolute;
 }
 
+.rod {
+    width: 10px;
+    background-color: yellow;
+    position: absolute;
+    transform-origin: 5px 0px;
+}
+
+.center {
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: blue;
+    position: absolute;
+}
+
 .pendulumContainer {
     position: relative;
 }
