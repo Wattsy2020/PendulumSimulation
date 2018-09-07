@@ -3,7 +3,7 @@ function pause(){
         clearInterval(interval);
     }
     else {
-        interval = setInterval(function(){p1.updatePendulum();}, frameRate*1000);
+        startAnimation();
     }
     paused = !paused;
 }

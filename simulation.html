@@ -12,25 +12,36 @@
             <div class="rod" id="rod1"></div>
             <div class="head" id="head1"></div>
 
-            <div id="logging">
-                <h3 id="angle">Angle: </h3>
-                <h3 id="vForce">Vertical Force: </h3>
-                <td><button onclick="pause()">Pause</button></td>
-            </div>
+            <div class="rod" id="rod2"></div>
+            <div class="head" id="head2"></div>
+        </div>
+
+        <div id="controls">
+            <td><button onclick="pause()">Pause</button></td>
         </div>
 
         <script>
         let center = document.getElementById("center1");
-        let rod = document.getElementById("rod1");
-        let head = document.getElementById("head1");
+        let rod1 = document.getElementById("rod1");
+        let head1 = document.getElementById("head1");
+        let rod2 = document.getElementById("rod2");
+        let head2 = document.getElementById("head2");
         
         let frameRate = .016 // time in seconds between frames (62.5 fps)
         let numCalculations = 10000 // number of times the position is updated between frames
         let timeInterval = frameRate/numCalculations;  // the amount of time between each calculation in seconds
-        let gravity = 10000; // increased gravity so the animation happens faster
+        let gravity = 1000; // increased gravity so the animation happens faster
 
-        p1 = new Pendulum(350, 600, 350, 900, center, rod, head);
-        let interval = setInterval(function(){p1.updatePendulum();}, frameRate*1000);
+        parentPendulum = new Pendulum(150, 500, 150, 700, center, rod1, head1);
+        childPendulum = new MovingPendulum(parentPendulum, 150, 900, rod2, head2);
+        System = new System(parentPendulum, childPendulum);
+
+        let interval
+        function startAnimation(){
+            interval = setInterval(function(){System.updatePendulums();}, frameRate*1000);
+        }
+
+        startAnimation();
         </script>
     </body>
 </html>
