@@ -24,11 +24,13 @@
         let rod = document.getElementById("rod1");
         let head = document.getElementById("head1");
         
-        let timeInterval = .005 // time in seconds between each calculation
-        let gravity = 1000; // increased gravity so the animation happens faster
+        let frameRate = .016 // time in seconds between frames (62.5 fps)
+        let numCalculations = 10000 // number of times the position is updated between frames
+        let timeInterval = frameRate/numCalculations;  // the amount of time between each calculation in seconds
+        let gravity = 10000; // increased gravity so the animation happens faster
 
-        p1 = new Pendulum(300, 600, 300, 900, center, rod, head);
-        let interval = setInterval(function(){p1.updatePendulum();}, timeInterval*1000);
+        p1 = new Pendulum(350, 600, 350, 900, center, rod, head);
+        let interval = setInterval(function(){p1.updatePendulum();}, frameRate*1000);
         </script>
     </body>
 </html>
