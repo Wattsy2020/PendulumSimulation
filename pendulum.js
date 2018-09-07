@@ -81,8 +81,8 @@ class Pendulum {
         this.headYPos += this.verticalVelocity*timeInterval;
     }
 
-    // updates all the pendulums values
-    updatePendulum(){
+    // recalculates the values after a short amount of time (simulated time, not actual time) has passed
+    calculateValues(){
         this.updateForces();
         this.updateVelocity();
         this.updatePosition();
@@ -91,6 +91,14 @@ class Pendulum {
         this.updateAngle();
         this.headXPos = this.length*Math.sin(this.angle) + this.centerXPos;
         this.headYPos = this.length*Math.cos(this.angle) + this.centerYPos;
+    }
+
+    // updates all the pendulum's values
+    updatePendulum(){
+        // update the pendulum's values in tiny time increments to increase accuracy
+        for (let i = 0; i < numCalculations; i++){
+            this.calculateValues();
+        }
 
         // update the head's position on the page, stuff after this.headYPos is to correct it so the center is positioned properly
         this.headElement.style.top = this.headYPos - this.headElement.offsetHeight/2 + this.rodElement.offsetWidth/2;
@@ -101,6 +109,6 @@ class Pendulum {
 
         // log values
         document.getElementById("angle").textContent = "Angle: " + this.angle*180/Math.PI;
-        document.getElementById("vForce").textContent = "Vertical Force: " + this.verticalForce;
+        document.getElementById("vForce").textContent = "Total Force: " + Math.abs(this.verticalForce) + Math.abs(this.horizontalForce);
     }
 }
