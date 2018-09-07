@@ -1,15 +1,29 @@
 class Pendulum {
-    constructor (centerYPos, centerXPos, headYPos, headXPos, headElement){
+    constructor (centerYPos, centerXPos, headYPos, headXPos, centerElement, rodElement, headElement){
         this.centerYPos = centerYPos;
         this.centerXPos = centerXPos;
         this.headYPos = headYPos;
         this.headXPos = headXPos;
+
+        this.centerElement = centerElement;
+        this.centerElement.style.top = centerYPos;
+        this.centerElement.style.left = centerXPos;
         this.headElement = headElement;
         
         this.length = this.calcLength();
         this.horizontalVelocity = 0;
         this.verticalVelocity = 0;
         this.updateAngle();
+
+        this.rodElement = rodElement;
+        this.rodElement.style.height = this.length;
+        this.rodElement.style.top = centerYPos + this.centerElement.offsetHeight/2;
+        this.rodElement.style.left = centerXPos;
+        this.updateRodAngle();
+    }
+
+    updateRodAngle(){
+        this.rodElement.style.transform =  "rotate("+this.angle*-180/Math.PI+"deg)";
     }
 
     // use pythagoras to find the length of the pendulum
@@ -78,9 +92,12 @@ class Pendulum {
         this.headXPos = this.length*Math.sin(this.angle) + this.centerXPos;
         this.headYPos = this.length*Math.cos(this.angle) + this.centerYPos;
 
-        // update the head's position on the page
-        this.headElement.style.top = this.headYPos;
-        this.headElement.style.left = this.headXPos;
+        // update the head's position on the page, stuff after this.headYPos is to correct it so the center is positioned properly
+        this.headElement.style.top = this.headYPos - this.headElement.offsetHeight/2 + this.rodElement.offsetWidth/2;
+        this.headElement.style.left = this.headXPos - this.headElement.offsetWidth/2 + this.rodElement.offsetWidth/2;
+
+        // update the rod
+        this.updateRodAngle();
 
         // log values
         document.getElementById("angle").textContent = "Angle: " + this.angle*180/Math.PI;
