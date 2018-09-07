@@ -65,20 +65,24 @@ class Pendulum {
         // use x = u + v*t
         this.headXPos += this.horizontalVelocity*timeInterval;
         this.headYPos += this.verticalVelocity*timeInterval;
-
-        // update the head's position on the page
-        this.headElement.style.top = this.headYPos;
-        this.headElement.style.left = this.headXPos;
     }
 
     // updates all the pendulums values
     updatePendulum(){
-        this.updateAngle();
         this.updateForces();
         this.updateVelocity();
         this.updatePosition();
 
-        document.getElementById("length").textContent = "Length: " + this.calcLength();
+        // correct small inacurracies by keeping the pendulum's length constant
+        this.updateAngle();
+        this.headXPos = this.length*Math.sin(this.angle) + this.centerXPos;
+        this.headYPos = this.length*Math.cos(this.angle) + this.centerYPos;
+
+        // update the head's position on the page
+        this.headElement.style.top = this.headYPos;
+        this.headElement.style.left = this.headXPos;
+
+        // log values
         document.getElementById("angle").textContent = "Angle: " + this.angle*180/Math.PI;
         document.getElementById("vForce").textContent = "Vertical Force: " + this.verticalForce;
     }
