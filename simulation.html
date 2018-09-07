@@ -1,0 +1,23 @@
+<html>
+    <head>
+        <title>Double pendulum</title>
+        <link rel="stylesheet" href="styles.css" />
+        <script src="pendulum.js"></script>
+    </head>
+
+    <body>
+        <div class="pendulumContainer">
+            <div class="head" id="head1"></div>
+        </div>
+
+        <script>
+        let head = document.getElementById("head1");
+        
+        let timeInterval = .005 // time in seconds between each calculation
+        let gravity = 1000; // increased gravity so the animation happens faster
+
+        p1 = new Pendulum(100, 500, 100, 900, head);
+        setInterval(function(){p1.updatePendulum();}, timeInterval*1000);
+        </script>
+    </body>
+</html>
