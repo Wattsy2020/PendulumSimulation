@@ -145,10 +145,16 @@ class MovingPendulum extends AbstractPendulum {
         super.calculateValues();
     }
 
+    updateRodAngle(){
+        this.rodElement.style.transform =  "rotate("+(this.angle*-180/Math.PI + 180)+"deg)";
+    }
+
     updateElementPositions(){
-        // console.log("Updating positions");
-        // console.log("X: " + this.headXPos + " Y: " + this.headYPos);
         super.updateElementPositions();
+
+        // reposition the rod
+        this.rodElement.style.left = this.headXPos;
+        this.rodElement.style.top = this.headYPos + parentPendulum.headElement.offsetHeight/2;
     }
 }
 
