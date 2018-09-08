@@ -10,14 +10,24 @@
         <div class="pendulumContainer">
             <div class="center" id="center1"></div>
             <div class="rod" id="rod1"></div>
-            <div class="head" id="head1"></div>
+            <div class="center" id="head1"></div>
 
             <div class="rod" id="rod2"></div>
             <div class="head" id="head2"></div>
         </div>
 
         <div id="controls">
-            <td><button onclick="pause()">Pause</button></td>
+            <table border = "0">
+                <tr>
+                    <td><button onclick="changeSpeed(1/2)">Reduce speed</button></td>
+                    <td><button onclick="pause()">Pause</button></td>
+                    <td><button onclick="changeSpeed(2)">Increase speed</button></td>
+                </tr>
+                <tr>
+                    <td><h3>Speed:</h3></td>
+                    <td colspan="2"><h3 id="speedDisplay">1</h3></td>
+                </tr>
+            </table>
         </div>
 
         <script>
