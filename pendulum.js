@@ -35,17 +35,16 @@ class AbstractPendulum {
     }
 
     // calculates the force due to tension in newtons
-    calcTension(){
+    updateTension(){
         let totalVelocity = Math.sqrt(Math.pow(this.horizontalVelocity, 2) + Math.pow(this.verticalVelocity, 2)); // pythagoras
-        return (gravity*Math.cos(this.angle) + Math.pow(totalVelocity, 2)/this.length);
+        this.tensionForce = (gravity*Math.cos(this.angle) + Math.pow(totalVelocity, 2)/this.length);
     }
 
     // updates the horizontal and vertical forces
     updateForces(){
         // split force due to tension into horizontal and vertical components, then add gravity to the verticalForce
-        let tensionForce = this.calcTension();
-        this.horizontalForce = -tensionForce*Math.sin(this.angle);
-        this.verticalForce = gravity - tensionForce*Math.cos(this.angle);
+        this.horizontalForce = -this.tensionForce*Math.sin(this.angle);
+        this.verticalForce = gravity - this.tensionForce*Math.cos(this.angle);
     }
 
     // updates the horizontal and vertical velocity by applying acceleration
@@ -63,8 +62,8 @@ class AbstractPendulum {
     }
 
     // recalculates the values after a short amount of time (simulated time, not actual time) has passed
+    // must be overriden in sub classes to work
     calculateValues(){
-        this.updateForces();
         this.updateVelocity();
         this.updatePosition();
 
@@ -110,6 +109,17 @@ class Pendulum extends AbstractPendulum {
         this.rodElement.style.left = centerXPos;
         this.updateRodAngle();
     }
+
+    calculateValues(child){
+        this.updateTension();
+        this.updateForces();
+
+        // add tension of the child pendulum to force
+        this.horizontalForce += child.tensionForce*Math.sin(child.angle);
+        this.verticalForce += child.tensionForce*Math.cos(child.angle);
+
+        super.calculateValues();
+    }
 }
 
 // represents a pendulum with a moving center, i.e. attached to another pendulum
@@ -133,6 +143,8 @@ class MovingPendulum extends AbstractPendulum {
         this.rodElement.style.top = this.centerYPos;
         this.rodElement.style.left = this.centerXPos;
         this.updateRodAngle();
+
+        this.updateTension();
     }   
 
     updateCenter(){
@@ -142,6 +154,9 @@ class MovingPendulum extends AbstractPendulum {
 
     calculateValues(){
         this.updateCenter();
+        this.updateTension();
+        this.updateForces();
+    
         super.calculateValues();
     }
 
@@ -168,7 +183,7 @@ class System {
     updatePendulums(){
         // update each pendulum's values in tiny time increments to increase accuracy
         for (let i = 0; i < numCalculations; i++){
-            this.basePendulum.calculateValues();
+            this.basePendulum.calculateValues(this.childPendulum);
             this.childPendulum.calculateValues();
         }
 
