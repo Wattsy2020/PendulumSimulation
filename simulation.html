@@ -22,10 +22,11 @@
                     <td><button onclick="changeSpeed(1/2)">Reduce speed</button></td>
                     <td><button onclick="pause()">Pause</button></td>
                     <td><button onclick="changeSpeed(2)">Increase speed</button></td>
+                    <td width="100"></td>
                 </tr>
                 <tr>
                     <td><h3>Speed:</h3></td>
-                    <td colspan="2"><h3 id="speedDisplay">1</h3></td>
+                    <td colspan="3"><h3 id="speedDisplay">1</h3></td>
                 </tr>
             </table>
         </div>
@@ -37,8 +38,8 @@
         let rod2 = document.getElementById("rod2");
         let head2 = document.getElementById("head2");
         
-        let frameRate = .016 // time in seconds between frames (62.5 fps)
-        let numCalculations = 10000 // number of times the position is updated between frames
+        let frameRate = .016; // time in seconds between frames (62.5 fps)
+        let numCalculations = 10000; // number of times the position is updated between frames
         let timeInterval = frameRate/numCalculations;  // the amount of time between each calculation in seconds
         let gravity = 1000; // increased gravity so the animation happens faster
 
@@ -46,7 +47,7 @@
         childPendulum = new MovingPendulum(parentPendulum, 150, 900, rod2, head2);
         System = new System(parentPendulum, childPendulum);
 
-        let interval
+        let interval;
         function startAnimation(){
             interval = setInterval(function(){System.updatePendulums();}, frameRate*1000);
         }
